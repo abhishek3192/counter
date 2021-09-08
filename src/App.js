@@ -1,23 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useRef } from "react";
+import "./App.css";
 
 function App() {
+  const [counter, setCounter] = useState(0);
+  const [active, setActive] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const countRef = useRef(null);
+
+  const handleStart = () => {
+    setActive(true);
+    setIsPaused(false);
+    countRef.current = setInterval(() => {
+      setCounter((counter) => counter + 1);
+    }, 1000);
+  };
+
+  const handleReset = () => {
+    clearInterval(countRef.current);
+    setCounter(0);
+    setActive(false);
+    setIsPaused(false);
+  };
+
+  const handlePause = () => {
+      clearInterval(countRef.current);
+      setIsPaused(false);
+    }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="card">
+        <p>{counter}</p>
+        <div className="buttons">
+          {!active && !isPaused ? (
+            <button onClick={handleStart}>Start</button>
+          ) : (
+            <button onClick={handlePause}>Pause</button>
+          )}
+          <button onClick={handleReset}>Reset</button>
+        </div>
+      </div>
     </div>
   );
 }
